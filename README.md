@@ -18,7 +18,7 @@ there are to ways to use the Airbnb console
 #### Iteractive Mode
 * **$./console.py** -> "the command"
 * **(hbnb)** -> "Once the command has been executed this Displays the prompt" which wait for a command to be inputed then execute it and print the result of the input and display the prompt again. This process is called REPL (Read Execute Print Loop) this continue unitl a quit command is input to quit the Console. See Example Below
-``bash
+```bash
 $ ./console.py
 (hbnb) help
 
@@ -37,9 +37,9 @@ Creates a new instance of class
 (hbnb)
 (hbnb) quit
 $
-``
+```
 #### Non Interactive Mode
-``bash
+```bash
 $ echo "help" | ./console.py
 (hbnb)
 
@@ -59,7 +59,7 @@ Documented commands (type help <topic>):
 EOF  help  quit
 (hbnb) 
 $
-``
+```
 ## Authors
 * Uche Esere
 * Iyk Faiz
