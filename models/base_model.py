@@ -33,6 +33,7 @@ class BaseModel:
                         kwargs["updated_at"], datetimeform)
                 else:
                     self.__dict__[key] = kwargs[key]
+            storage.new(self)
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
