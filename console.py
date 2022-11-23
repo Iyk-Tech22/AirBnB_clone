@@ -101,15 +101,14 @@ class HBNBCommand(cmd.Cmd):
 						obj_to_update = value.to_dict()
 						del objs[key]
 						obj_to_update[attr_name] = attr_val
-						print(obj_to_update)
 						obj_to_update = self.Classes[cls_name](**obj_to_update)
 						obj_to_update.save()
-						#print(obj_to_update.id, obj_to_update)
 					found = True
 					break
 			if not found:
 				print("** no instance found **")
 		self.validate_cmd_arg(arg, action)
+		
 	def do_quit(self, arg):
 		"Quit command to exit the program"
 		return True
