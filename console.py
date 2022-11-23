@@ -27,7 +27,7 @@ class HBNBCommand(cmd.Cmd):
 		return res
 
 	def do_create(self, arg):
-		"cmd to create a new instance of a class"
+		"""create command: to create a new instance of a class"""
 		if not arg:
 			print("** class name missing **")
 		elif arg not in self.Classes_k:
@@ -38,7 +38,7 @@ class HBNBCommand(cmd.Cmd):
 			print(new_obj.id)
 
 	def do_show(self, arg):
-		"show command: show a specific instance of an obj base on the cls_name and cls_id"
+		"""show command: show a specific instance of an obj base on the cls_name and cls_id"""
 		def action(cls_name, cls_id, attr_name, attr_val):
 			"get an instance from the file storage"
 			self.storage.reload()
@@ -55,7 +55,7 @@ class HBNBCommand(cmd.Cmd):
 		self.validate_cmd_arg(arg, action)
 
 	def do_destroy(self, arg):
-		"Destory an instance base on the class and id"
+		"""destroy command: destroy an instance base on the class and id"""
 
 		def action(cls_name, cls_id, attr_name, attr_val):
 			"delete a instance and save to file"
@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
 				print("** no instance found **")
 		self.validate_cmd_arg(arg, action)
 	def do_all(self, arg):
-		"all / all option: Print all string representation of an instance base or do not have class name"
+		"""all / all option: Print all string representation of an instance base or do not have class name"""
 		objs = self.storage.all()
 		if not arg:
 			print([value.__str__() for key, value in objs.items() if "BaseModel" in key.split(".")])
@@ -84,7 +84,7 @@ class HBNBCommand(cmd.Cmd):
 
 	def do_update(self, arg):
 		""" update command: update an attribute or add new attribute to an instance
-			Usage: <class name> <id> <attribute name> "<attribute value>"
+		    Usage: <class name> <id> <attribute name> "<attribute value>"
 		"""
 		def action(cls_name, cls_id, attr_name, attr_val):
 			"update attr or add new attr at time"
@@ -110,10 +110,11 @@ class HBNBCommand(cmd.Cmd):
 		self.validate_cmd_arg(arg, action)
 		
 	def do_quit(self, arg):
-		"Quit command to exit the program"
+		"""Quit command to exit the program"""
 		return True
 
 	def do_EOF(self, arg):
+		"""EOF command: quick when key event is fire with CtrlD"""
 		return True
 
 	def emptyline(self):
@@ -121,7 +122,7 @@ class HBNBCommand(cmd.Cmd):
 		pass
 
 	def validate_cmd_arg(self, arg, action):
-		"validate the args of show, destroy....commands"
+		"""validate the args of show, destroy....commands"""
 		cls_name, cls_id, args = self.parseline(arg)
 		if not arg:
 			print("** class name missing **")
