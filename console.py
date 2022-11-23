@@ -70,41 +70,6 @@ class HBNBCommand(cmd.Cmd):
 	def emptyline(self):
 		"""Does nothing when the enterkey is pressed"""
 		pass
-	def do_create(self, line):
-		"""Creates an instance.
-        """
-		if line == "" or line is None:
-			print("** class name missing **")
-		elif line not in storage.classes():
-			print("** class doesn't exist **")
-		else:
-			b = storage.classes()[line]()
-			b.save()
-			print(b.id)
-
-
-
-
-	def do_show(self, arg):
-		"""Prints the string representation of an instance.
-        """
-		if arg == "" or arg is None:
-			print("** class name missing **")
-		else:
-			letters = arg.split(' ')
-		if letters[0] not in storage.classes():
-			print("** class doesn't exist **")
-		elif len(letters) < 2:
-			print("** instance id missing **")
-		else:
-			key = "{}.{}".format(letters[0], letters[1])
-			if key not in storage.all():
-				print("** no instance found **")
-			else:
-				print(storage.all()[key])
-
-
-
 
 if __name__ == "__main__":
 	HBNBCommand().cmdloop()
