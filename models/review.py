@@ -6,6 +6,6 @@ class Review (BaseModel):
     """
     inherits from BaseModel
     """
-    place_id:str ""
-    user_id:str = ""
+    place_id:str = " "
+    user_id:str = " "
     text:str =" "
