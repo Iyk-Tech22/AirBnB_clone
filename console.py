@@ -1,12 +1,18 @@
 #!/usr/bin/python3
 
-
 import cmd
 import re
 from shlex import shlex
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+from models.engine.errors import *
 from models.engine.file_storage import FileStorage
-from models import storage
+from datetime import datetime
 
 """
 Console is the main entry for the program.
@@ -26,33 +32,6 @@ class HBNBCommand(cmd.Cmd):
     def postloop(self):
         "print a newline after exiting the console"
         print()
-
-    def onecmd(self, arg):
-        """ onecmd is a func that is called by cmd.Cmd
-            before the args  dispach to the right cmd
-        """
-        try:
-            if "." in arg and ")" in arg:
-                args = arg.split(".")
-                cls_name = args[0]
-                cls_id = ""
-                attr_name = ""
-                attr_val = ""
-                res = args[1].strip(")").split("(")
-                if len(res) == 1:
-                    cmd_name = res[0]
-                elif "," not in res[1] and len(res) == 2:
-                    cmd_name = res[0]
-                    cls_id = res[1].strip('"')
-                else:
-                    cmd_name = res[0]
-                    res = res[1].split(",")
-                    cls_id = res[0].replace('"', '')
-                    attr_name = res[1]
-                    attr_val = res[2]
-                arg = f"{cmd_name} {cls_name} {cls_id} {attr_name} {attr_val}"
-        finally:
-            return cmd.Cmd.onecmd(self, arg)
 
     def parseline(self, arg):
         "return tuple of the cmd and the args"
@@ -124,11 +103,15 @@ class HBNBCommand(cmd.Cmd):
                 elif not attr_val:
                     print("** value missing **")
                 else:
-                    obj_to_update = objs[key].to_dict()
-                    del objs[key]
-                    obj_to_update[attr_name] = attr_val
-                    obj_to_update = self.Classes[cls_name](**obj_to_update)
-                    obj_to_update.save()
+                    try:
+                        obj = objs[key]
+                        vtype = type(attr_name)
+                        obj.__dict__[attr_name] = vtype(attr_val)
+                    except KeyError:
+                        obj.__dict__[attr_name] = attr_val
+                    finally:
+                        obj.updated_at = datetime.utcnow()
+                        self.storage.save()
             else:
                 print("** no instance found **")
         self.validate_arg(arg, action)
@@ -184,6 +167,40 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     attr_val = None
                 action(cls_name, cls_id, attr_name, attr_val)
+
+    def Handler(self, arg):
+        """
+           Handles other commands
+           [Usage]: <class>.<method>...User.all()
+        """
+        printable = ("all(", "create(", "count(", "show(")
+        try:
+            result = eval(arg)
+            for i in printable:
+                if i in arg:
+                    print(result)
+                    break
+        except AttributeError:
+            print("*** Invalid Method ***")
+        except InstanceNotFoundError:
+            print("** no instance found **")
+        except TypeError:
+            print("** instance id missing **")
+        except FieldMissingError:
+            print("** fields missing **")
+        except Exception:
+            print("** invalid syntax **")
+
+    def default(self, arg):
+        """ Calls handler"""
+        if "." in arg and ")" in arg[-1]:
+            if arg.split(".")[0] in self.Classes_k:
+                return self.Handler(arg)
+            else:
+                print("** class doesn't exist **")
+                return
+        else:
+            return cmd.Cmd.default(self, arg)
 
 
 if __name__ == "__main__":
